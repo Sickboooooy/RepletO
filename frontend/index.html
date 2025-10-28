@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RepletO - Código en la Nube</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>🚀 RepletO</h1>
+        <p>Entorno de ejecución de código en la nube</p>
+    </header>
+    
+    <main>
+        <div class="container">
+            <div class="editor-section">
+                <h2>Editor de Código</h2>
+                <textarea id="codeEditor" placeholder="# Escribe tu código Python aquí
+print('¡Hola RepletO!')
+
+# Ejemplo de variables
+nombre = 'Desarrollador'
+print(f'Bienvenido, {nombre}!')
+
+# Ejemplo de bucle
+for i in range(3):
+    print(f'Iteración: {i}')"></textarea>
+                <button id="runButton">▶ Ejecutar Código</button>
+            </div>
+            
+            <div class="output-section">
+                <h2>Salida</h2>
+                <div id="output" class="output-box">
+                    <p class="placeholder">La salida de tu código aparecerá aquí...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <p>RepletO - Proyecto de práctica | <a href="https://github.com/tu-usuario/RepletO">GitHub</a></p>
+    </footer>
+    
+    <script src="js/app.js"></script>
+</body>
+</html>
