@@ -44,7 +44,7 @@ def execute_code(code: str, timeout: int = 5) -> Dict[str, Any]:
     
     # Crear archivo temporal para el código
     try:
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as temp_file:
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False, encoding='utf-8') as temp_file:
             temp_file.write(code)
             temp_file_path = temp_file.name
         
@@ -58,8 +58,12 @@ def execute_code(code: str, timeout: int = 5) -> Dict[str, Any]:
             env={  # Entorno limitado
                 'PATH': os.environ.get('PATH', ''),
                 'PYTHONPATH': '',
-                'HOME': tempfile.gettempdir()
-            }
+                'HOME': tempfile.gettempdir(),
+                'PYTHONIOENCODING': 'utf-8',  # Forzar UTF-8 para emojis
+                'PYTHONUTF8': '1'  # Modo UTF-8 en Python 3.7+
+            },
+            encoding='utf-8',  # Especificar encoding explícitamente
+            errors='replace'   # Reemplazar caracteres problemáticos
         )
         
         # Limpiar archivo temporal

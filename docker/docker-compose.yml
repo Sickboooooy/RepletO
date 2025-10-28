@@ -1,0 +1,182 @@
+# 🐳 RepletO v2.0 - Docker Compose
+# ==================================
+
+version: '3.8'
+
+services:
+  # 🚀 Aplicación principal RepletO
+  repleto-app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: repleto-v2
+    restart: unless-stopped
+    ports:
+      - "8000:8000"   # API Backend
+      - "8080:8080"   # Frontend (opcional)
+    volumes:
+      # 💾 Persistencia de datos
+      - repleto-data:/app/data
+      - repleto-logs:/app/logs
+      - repleto-temp:/app/temp
+      
+      # 🔄 Git repos (opcional - para desarrollo)
+      - ../:/app/workspace:rw
+      
+      # ⚙️ Configuración personalizada
+      - ./config:/app/config:ro
+    environment:
+      # 🌍 Variables de entorno
+      - REPLETO_ENV=production
+      - REPLETO_DEBUG=false
+      - REPLETO_DB_PATH=/app/data/repleto.db
+      - REPLETO_LOG_LEVEL=INFO
+      - REPLETO_MAX_EXECUTION_TIME=30
+      - REPLETO_MAX_MEMORY_MB=512
+      
+      # 🤖 IA APIs (opcional)
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      
+      # 🔄 Git configuración
+      - GIT_AUTHOR_NAME=${GIT_AUTHOR_NAME:-RepletO User}
+      - GIT_AUTHOR_EMAIL=${GIT_AUTHOR_EMAIL:-user@repleto.local}
+      
+      # 🔐 Seguridad
+      - REPLETO_SECRET_KEY=${REPLETO_SECRET_KEY:-change-this-secret-key}
+      - REPLETO_CORS_ORIGINS=${REPLETO_CORS_ORIGINS:-http://localhost:8080,http://localhost:3000}
+    
+    networks:
+      - repleto-network
+    
+    # 💪 Límites de recursos
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.1'
+    
+    # 🔍 Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # 🗄️ Base de datos externa (opcional - para desarrollo/producción avanzada)
+  repleto-postgres:
+    image: postgres:15-alpine
+    container_name: repleto-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: repleto
+      POSTGRES_USER: repleto
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-repleto-secure-password}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - repleto-network
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.3'
+    profiles:
+      - postgres  # Solo activar con --profile postgres
+
+  # 📊 Monitoring con Prometheus (opcional)
+  repleto-prometheus:
+    image: prom/prometheus:latest
+    container_name: repleto-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+    networks:
+      - repleto-network
+    profiles:
+      - monitoring
+
+  # 📈 Grafana para visualización (opcional)
+  repleto-grafana:
+    image: grafana/grafana:latest
+    container_name: repleto-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    networks:
+      - repleto-network
+    profiles:
+      - monitoring
+
+  # 🌐 Reverse proxy con Nginx (para producción)
+  repleto-nginx:
+    image: nginx:alpine
+    container_name: repleto-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - nginx-logs:/var/log/nginx
+    depends_on:
+      - repleto-app
+    networks:
+      - repleto-network
+    profiles:
+      - production
+
+# 🌐 Red personalizada
+networks:
+  repleto-network:
+    driver: bridge
+    name: repleto-network
+
+# 💾 Volúmenes persistentes
+volumes:
+  repleto-data:
+    name: repleto-data
+    driver: local
+  
+  repleto-logs:
+    name: repleto-logs
+    driver: local
+  
+  repleto-temp:
+    name: repleto-temp
+    driver: local
+  
+  postgres-data:
+    name: repleto-postgres-data
+    driver: local
+  
+  prometheus-data:
+    name: repleto-prometheus-data
+    driver: local
+  
+  grafana-data:
+    name: repleto-grafana-data
+    driver: local
+  
+  nginx-logs:
+    name: repleto-nginx-logs
+    driver: local

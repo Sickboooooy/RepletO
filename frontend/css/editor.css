@@ -1,0 +1,234 @@
+/* RepletO - Estilos del Editor */
+/* Estilos específicos para Monaco Editor y componentes relacionados */
+
+/* Contenedor del editor Monaco */
+.monaco-editor {
+    --editor-bg: #1e1e1e;
+    --editor-fg: #d4d4d4;
+}
+
+/* Editor de fallback (textarea) */
+.fallback-editor {
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border: none;
+    outline: none;
+    font-family: var(--font-family-mono);
+    font-size: 14px;
+    line-height: 1.5;
+    padding: var(--spacing-md);
+    resize: none;
+    tab-size: 4;
+    white-space: pre;
+    overflow-wrap: break-word;
+    word-break: break-all;
+}
+
+.fallback-editor:focus {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.fallback-editor::placeholder {
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+/* Personalización adicional para Monaco Editor */
+.monaco-editor .margin {
+    background-color: var(--bg-secondary) !important;
+}
+
+.monaco-editor .monaco-editor-background {
+    background-color: var(--bg-primary) !important;
+}
+
+/* Personalización de la barra de desplazamiento del editor */
+.monaco-editor .decorationsOverviewRuler {
+    background-color: var(--bg-secondary) !important;
+}
+
+/* Estilos para el autocompletado */
+.monaco-editor .suggest-widget {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+
+.monaco-editor .suggest-widget .monaco-list .monaco-list-row {
+    background-color: var(--bg-secondary) !important;
+}
+
+.monaco-editor .suggest-widget .monaco-list .monaco-list-row:hover {
+    background-color: var(--bg-tertiary) !important;
+}
+
+.monaco-editor .suggest-widget .monaco-list .monaco-list-row.focused {
+    background-color: var(--accent-primary) !important;
+}
+
+/* Estilos para tooltips y hover */
+.monaco-editor .monaco-hover {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.monaco-editor .monaco-hover .monaco-hover-content {
+    color: var(--text-primary) !important;
+}
+
+/* Personalización del menú contextual */
+.monaco-menu {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+
+.monaco-menu .monaco-action-bar .action-item .action-label {
+    color: var(--text-primary) !important;
+}
+
+.monaco-menu .monaco-action-bar .action-item:hover .action-label {
+    background-color: var(--bg-tertiary) !important;
+}
+
+/* Personalización de la búsqueda */
+.monaco-editor .find-widget {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: var(--shadow-md) !important;
+}
+
+.monaco-editor .find-widget input {
+    background-color: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+/* Personalización de la paleta de comandos */
+.quick-input-widget {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+
+/* Estilos para resaltado de errores y warnings */
+.monaco-editor .squiggly-error {
+    border-bottom: 2px wavy var(--error-color) !important;
+}
+
+.monaco-editor .squiggly-warning {
+    border-bottom: 2px wavy var(--warning-color) !important;
+}
+
+.monaco-editor .squiggly-info {
+    border-bottom: 2px wavy var(--accent-secondary) !important;
+}
+
+/* Personalización de números de línea */
+.monaco-editor .line-numbers {
+    color: var(--text-muted) !important;
+}
+
+.monaco-editor .current-line ~ .line-numbers {
+    color: var(--text-secondary) !important;
+}
+
+/* Personalización de la línea actual */
+.monaco-editor .current-line {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+/* Personalización de la selección */
+.monaco-editor .selected-text {
+    background-color: rgba(33, 150, 243, 0.3) !important;
+}
+
+/* Personalización del cursor */
+.monaco-editor .cursor {
+    color: var(--text-primary) !important;
+}
+
+/* Estilos para el modo de solo lectura */
+.monaco-editor.read-only {
+    opacity: 0.8;
+}
+
+.monaco-editor.read-only .margin {
+    background-color: var(--bg-tertiary) !important;
+}
+
+/* Animaciones suaves para cambios de tema */
+.monaco-editor * {
+    transition: background-color var(--transition-fast), 
+                color var(--transition-fast), 
+                border-color var(--transition-fast);
+}
+
+/* Estilos para el indicador de carga del editor */
+.editor-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-color: var(--bg-primary);
+    color: var(--text-secondary);
+}
+
+.editor-loading .loading-text {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-sm);
+}
+
+.editor-loading .loading-dots::after {
+    content: '';
+    animation: dots 1.5s linear infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: ''; }
+    40% { content: '.'; }
+    60% { content: '..'; }
+    80%, 100% { content: '...'; }
+}
+
+/* Personalización para diferentes tamaños de pantalla */
+@media (max-width: 768px) {
+    /* En móviles, reducir padding del editor */
+    .monaco-editor {
+        font-size: 12px !important;
+    }
+    
+    /* Hacer más grandes los elementos touch en móviles */
+    .monaco-editor .suggest-widget .monaco-list .monaco-list-row {
+        min-height: 32px !important;
+    }
+}
+
+/* Modo de alto contraste (accesibilidad) */
+@media (prefers-contrast: high) {
+    .monaco-editor {
+        --editor-bg: #000000;
+        --editor-fg: #ffffff;
+    }
+    
+    .monaco-editor .margin {
+        background-color: #000000 !important;
+    }
+    
+    .monaco-editor .monaco-editor-background {
+        background-color: #000000 !important;
+    }
+}
+
+/* Reducir animaciones si el usuario prefiere menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+    .monaco-editor * {
+        transition: none !important;
+        animation: none !important;
+    }
+}

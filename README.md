@@ -34,9 +34,42 @@ source venv/bin/activate
 pip install -r backend/requirements.txt
 ```
 
-## 🚀 Ejecución
+## 🧪 Ejemplos de Uso
 
-### Iniciar el servidor de desarrollo:
+### � Usando el Frontend (Recomendado):
+1. Abre http://localhost:3000 en tu navegador
+2. El código de ejemplo se carga automáticamente
+3. Presiona `Ctrl+Enter` para ejecutar
+4. ¡Experimenta con tu propio código Python!
+
+### 🔧 Usando el API directamente:
+
+### Método 1: Desarrollo Completo (Frontend + Backend)
+
+#### 1. **Iniciar el Backend:**
+```bash
+# Terminal 1 - Backend API
+cd RepletO
+python -m venv venv
+venv\Scripts\activate  # Windows
+pip install -r backend/requirements.txt
+uvicorn backend.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+#### 2. **Iniciar el Frontend:**
+```bash
+# Terminal 2 - Frontend Server
+cd RepletO
+python serve-frontend.py
+```
+
+#### 3. **Acceder a la aplicación:**
+- **Frontend completo:** http://localhost:3000
+- **API Backend:** http://127.0.0.1:8000
+- **Documentación API:** http://127.0.0.1:8000/docs
+
+### Método 2: Solo Backend (para testing API)
+
 ```bash
 uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
 ```
@@ -71,7 +104,30 @@ Ejecuta código Python.
 ### `GET /health`
 Verificación de salud del servidor.
 
-## 🧪 Ejemplos de Uso
+## 🎨 Frontend Interactivo
+
+### ✨ Características del Frontend:
+- **🖥️ Editor Monaco:** Syntax highlighting para Python (mismo que VS Code)
+- **🎯 Interfaz tipo Replit:** Layout de 2 paneles con diseño profesional
+- **⚡ Ejecución en tiempo real:** Resultados instantáneos con timestamps
+- **🎹 Atajos de teclado:** 
+  - `Ctrl+Enter` / `Cmd+Enter` → Ejecutar código
+  - `Ctrl+L` / `Cmd+L` → Limpiar output
+- **📱 Responsive:** Funciona en desktop, tablet y móvil
+- **🌙 Tema oscuro:** Optimizado para programación
+- **🔄 Auto-scroll:** Output panel se actualiza automáticamente
+- **💾 Auto-guardado:** El código se guarda automáticamente
+
+### 🎮 Cómo usar:
+1. Escribe código Python en el editor izquierdo
+2. Presiona `Ctrl+Enter` o el botón "Ejecutar"
+3. Ve los resultados en el panel derecho
+4. Usa el botón "Limpiar" para resetear el output
+
+### 🌐 URLs del Frontend:
+- **Aplicación principal:** http://localhost:3000
+- **Panel de desarrollo:** F12 para DevTools
+- **Estado del servidor:** Indicador visual en tiempo real
 
 ### Con curl:
 ```bash
@@ -121,9 +177,18 @@ RepletO/
 │   ├── sandbox.py       # Sistema de ejecución segura
 │   ├── requirements.txt # Dependencias Python
 │   └── __init__.py
-├── frontend/            # Interface web (próximamente)
+├── frontend/            # 🆕 Interface web interactiva
+│   ├── index.html       # Página principal
+│   ├── css/
+│   │   ├── styles.css   # Estilos principales
+│   │   └── editor.css   # Estilos del Monaco Editor
 │   ├── js/
-│   └── css/
+│   │   ├── main.js      # Lógica principal de la app
+│   │   ├── api.js       # Cliente API para backend
+│   │   ├── editor.js    # Configuración Monaco Editor
+│   │   └── resizer.js   # Manejo de paneles (futuro)
+│   └── assets/          # Recursos estáticos
+├── serve-frontend.py    # 🆕 Servidor HTTP para frontend
 ├── .gitignore
 ├── README.md
 └── docker-compose.yml   # Configuración Docker (próximamente)
@@ -135,11 +200,17 @@ RepletO/
 - [x] Sistema sandbox seguro
 - [x] Endpoint /run funcional
 - [x] Validación de código malicioso
-- [ ] Frontend web interactivo
-- [ ] Soporte para múltiples lenguajes
-- [ ] Sistema de autenticación
-- [ ] Persistencia de proyectos
+- [x] **🆕 Frontend web interactivo**
+- [x] **🆕 Editor Monaco con syntax highlighting**
+- [x] **🆕 Interfaz tipo VSCode/Replit**
+- [x] **🆕 Atajos de teclado y responsive design**
+- [ ] Soporte para múltiples lenguajes (JavaScript, Node.js)
+- [ ] Sistema de autenticación y usuarios
+- [ ] Persistencia de proyectos y archivos
 - [ ] Colaboración en tiempo real
+- [ ] Integración con GitHub
+- [ ] Containerización con Docker
+- [ ] Deploy en la nube
 
 ## 🤝 Contribuir
 
@@ -158,18 +229,34 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 ## 🔥 Quick Start
 
 ```bash
-# Clonar e instalar
-git clone https://github.com/tu-usuario/RepletO.git
+# 🚀 Setup completo (una sola vez)
+git clone https://github.com/Sickboooooy/RepletO.git
 cd RepletO
 python -m venv venv
 venv\Scripts\activate  # Windows
 pip install -r backend/requirements.txt
 
-# Ejecutar
+# ⚡ Ejecutar (2 terminales)
+# Terminal 1 - Backend:
 uvicorn backend.main:app --reload
 
-# Probar
-curl -X POST "http://localhost:8000/run" -H "Content-Type: application/json" -d '{"code": "print(\"RepletO funcionando!\")"}'
+# Terminal 2 - Frontend:
+python serve-frontend.py
+
+# 🌐 Abrir navegador:
+# http://localhost:3000
 ```
+
+## 🎮 Demo en Vivo
+
+![RepletO Screenshot](https://via.placeholder.com/800x400/1e1e1e/4CAF50?text=RepletO%20-%20Editor%20Python%20Online)
+
+### 🔥 Características destacadas:
+- ⚡ **Ejecución instantánea** de código Python
+- 🎨 **Editor profesional** con syntax highlighting
+- 🛡️ **Sandbox seguro** con timeout automático
+- 📱 **Responsive design** para todos los dispositivos
+- ⌨️ **Atajos de teclado** como en VS Code
+- 🌙 **Tema oscuro** optimizado para programación
 
 ¡Listo para programar en la nube! 🚀
