@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RepletO v2.0 - Editor Simple</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .editor-container {
+            display: flex;
+            gap: 20px;
+            height: 600px;
+        }
+        .code-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .output-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        textarea {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: none;
+        }
+        .output {
+            flex: 1;
+            background: #1e1e1e;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .controls {
+            margin: 10px 0;
+            text-align: center;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .examples {
+            margin: 10px 0;
+        }
+        select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-right: 10px;
+        }
+        .status {
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .status.success { color: #4CAF50; }
+        .status.error { color: #f44336; }
+        .status.executing { color: #2196F3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>RepletO v2.0 - Editor Simple Funcional</h1>
+            <p>Editor Python en línea que realmente funciona</p>
+        </div>
+        
+        <div class="examples">
+            <select id="exampleSelect">
+                <option value="">Seleccionar ejemplo...</option>
+                <option value="basico">Ejemplo Básico</option>
+                <option value="calculadora">Calculadora</option>
+                <option value="funciones">Funciones</option>
+                <option value="listas">Listas y Bucles</option>
+            </select>
+            <button onclick="cargarEjemplo()">Cargar Ejemplo</button>
+        </div>
+        
+        <div class="editor-container">
+            <div class="code-area">
+                <h3>Código Python:</h3>
+                <textarea id="codeEditor" placeholder="Escribe tu código Python aquí...">print("¡Hola RepletO v2.0!")
+print("=" * 30)
+
+# Variables
+nombre = "Desarrollador"
+print(f"Bienvenido, {nombre}!")
+
+# Operaciones matemáticas
+a = 10
+b = 5
+print(f"Suma: {a} + {b} = {a + b}")
+print(f"Multiplicación: {a} * {b} = {a * b}")
+
+# Lista simple
+numeros = [1, 2, 3, 4, 5]
+print(f"Números: {numeros}")
+print(f"Suma total: {sum(numeros)}")
+
+print("\\n¡RepletO funcionando perfectamente!")</textarea>
+            </div>
+            
+            <div class="output-area">
+                <h3>Salida:</h3>
+                <div id="output" class="output">Presiona "Ejecutar" para ver la salida...</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="executeBtn" onclick="ejecutarCodigo()">🚀 Ejecutar Código</button>
+            <button onclick="limpiarEditor()">🗑️ Limpiar</button>
+            <button onclick="limpiarSalida()">📋 Limpiar Salida</button>
+        </div>
+        
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+        const ejemplos = {
+            basico: `print("RepletO v2.0 - Prueba Básica")
+print("=" * 40)
+print("¡Hola mundo desde RepletO!")
+print("Python funcionando correctamente")`,
+
+            calculadora: `print("=== CALCULADORA REPLETO ===")
+a = 25
+b = 8
+print(f"Números: a = {a}, b = {b}")
+print(f"Suma: {a} + {b} = {a + b}")
+print(f"Resta: {a} - {b} = {a - b}")
+print(f"Multiplicación: {a} * {b} = {a * b}")
+print(f"División: {a} / {b} = {a / b:.2f}")
+print(f"Potencia: {a} ** 2 = {a ** 2}")
+
+# Funciones matemáticas
+import math
+print(f"\\nFunciones matemáticas:")
+print(f"Raíz cuadrada de 64: {math.sqrt(64)}")
+print(f"Sin(π/2): {math.sin(math.pi/2)}")`,
+
+            funciones: `def saludar(nombre):
+    return f"¡Hola {nombre}!"
+
+def factorial(n):
+    if n <= 1:
+        return 1
+    return n * factorial(n - 1)
+
+def es_primo(num):
+    if num < 2:
+        return False
+    for i in range(2, int(num ** 0.5) + 1):
+        if num % i == 0:
+            return False
+    return True
+
+# Probar funciones
+print("=== FUNCIONES PYTHON ===")
+print(saludar("RepletO"))
+print(f"Factorial de 5: {factorial(5)}")
+print(f"¿Es 17 primo? {es_primo(17)}")
+print(f"¿Es 15 primo? {es_primo(15)}")`,
+
+            listas: `print("=== LISTAS Y BUCLES ===")
+
+# Lista de números
+numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+print(f"Lista original: {numeros}")
+
+# Operaciones con listas
+pares = [n for n in numeros if n % 2 == 0]
+cuadrados = [n ** 2 for n in numeros]
+
+print(f"Números pares: {pares}")
+print(f"Cuadrados: {cuadrados}")
+
+# Bucle for
+print("\\nContando del 1 al 5:")
+for i in range(1, 6):
+    print(f"  Número: {i}")
+
+# Lista de frutas
+frutas = ["manzana", "banana", "naranja", "uva"]
+print("\\nFrutas disponibles:")
+for i, fruta in enumerate(frutas, 1):
+    print(f"  {i}. {fruta.title()}")`
+        };
+
+        function cargarEjemplo() {
+            const select = document.getElementById('exampleSelect');
+            const editor = document.getElementById('codeEditor');
+            
+            if (select.value && ejemplos[select.value]) {
+                editor.value = ejemplos[select.value];
+                setStatus('Ejemplo cargado', 'success');
+            }
+        }
+
+        function limpiarEditor() {
+            document.getElementById('codeEditor').value = '';
+            setStatus('Editor limpiado', 'success');
+        }
+
+        function limpiarSalida() {
+            document.getElementById('output').textContent = 'Salida limpiada...';
+            setStatus('Salida limpiada', 'success');
+        }
+
+        function setStatus(message, type = '') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            
+            setTimeout(() => {
+                status.textContent = '';
+                status.className = 'status';
+            }, 3000);
+        }
+
+        async function ejecutarCodigo() {
+            const codigo = document.getElementById('codeEditor').value.trim();
+            const output = document.getElementById('output');
+            const executeBtn = document.getElementById('executeBtn');
+            
+            if (!codigo) {
+                setStatus('No hay código para ejecutar', 'error');
+                return;
+            }
+            
+            // Deshabilitar botón y mostrar estado
+            executeBtn.disabled = true;
+            executeBtn.textContent = '⏳ Ejecutando...';
+            output.textContent = 'Ejecutando código...';
+            setStatus('Ejecutando código...', 'executing');
+            
+            try {
+                const response = await fetch('/api/execute', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ code: codigo })
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    output.textContent = result.output || '(Sin salida)';
+                    setStatus('✅ Código ejecutado correctamente', 'success');
+                } else {
+                    output.textContent = `ERROR:\\n\\n${result.error || 'Error desconocido'}\\n\\nOUTPUT:\\n${result.output || 'N/A'}`;
+                    setStatus('❌ Error en la ejecución', 'error');
+                }
+                
+            } catch (error) {
+                output.textContent = `ERROR DE CONEXIÓN:\\n\\n${error.message}`;
+                setStatus('❌ Error de conexión con el servidor', 'error');
+                console.error('Error:', error);
+            } finally {
+                // Rehabilitar botón
+                executeBtn.disabled = false;
+                executeBtn.textContent = '🚀 Ejecutar Código';
+            }
+        }
+
+        // Permitir Ctrl+Enter para ejecutar
+        document.getElementById('codeEditor').addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                ejecutarCodigo();
+            }
+        });
+
+        // Cargar ejemplo básico al inicio
+        window.onload = function() {
+            setStatus('RepletO v2.0 listo para usar', 'success');
+        };
+    </script>
+</body>
+</html>

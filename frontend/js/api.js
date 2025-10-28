@@ -234,7 +234,7 @@ class RepletOAPI {
         }
 
         try {
-            const response = await this.request('/execute', {
+            const response = await this.request('/api/execute', {
                 method: 'POST',
                 body: JSON.stringify({
                     code: code.trim(),
@@ -430,7 +430,7 @@ class RepletOAPI {
      */
     async checkHealth() {
         try {
-            const response = await this.request('/health');
+            const response = await this.request('/api/health');
             const result = await response.json();
             
             return {
