@@ -23,7 +23,21 @@ nbformat>=5.7.0
 # 🔄 Git y Control de Versiones
 GitPython>=3.1.40
 
-# 📈 Visualización y Data Science (opcional)
+# �️ Web Scraping y Crawling (SCJN Integration)
+selenium>=4.15.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+pyppeteer>=1.0.2
+requests>=2.31.0
+
+# 📊 Vector Database (RAG)
+chromadb>=0.4.0
+sentence-transformers>=2.2.0
+
+# ⏰ Scheduling
+apscheduler>=3.10.4
+
+# �📈 Visualización y Data Science (opcional)
 matplotlib>=3.7.0
 pandas>=2.0.0
 numpy>=1.24.0
